@@ -39,6 +39,9 @@
             // you can add more functions like the one below and
             // call them like so: this.yourOtherFunction(this.element, this.settings).
 
+            var eventLoading = jQuery.Event("lazyBootstrapCarousel.loading");
+            var eventLoaded = jQuery.Event("lazyBootstrapCarousel.loaded");
+
             $(this.element).on(
                 'slid.bs.carousel', function () {
                     var items = $(this).find('.item');
@@ -55,43 +58,23 @@
 
                     nextItemImage = nextItem.find('> img');
                     prevItemImage = prevItem.find('> img');
-                    var nextLoader = nextItem.find('.loader');
-                    var prevLoader = prevItem.find('.loader');
-
-                    if (nextLoader.length == 0) {
-                        nextItem.prepend('<div class="loader center" style="display: none;"><img src="./images/loader.gif" /></div>');
-                        nextLoader = nextItem.find('.loader')
-                    }
-                    if (prevLoader.length == 0) {
-                        prevItem.prepend('<div class="loader center" style="display: none;"><img src="./images/loader.gif" /></div>');
-                        prevLoader = prevItem.find('.loader')
-                    }
 
                     var nextAndPrev = nextItemImage.add(prevItemImage);
                     nextAndPrev.one('load', function () {
-                        $(this).parent().find('.loader').fadeOut();
-                        $(this).stop(true, true).animate({
-                            opacity: '1.0'
-                        }, 300)
+                        $(this).parents('.item').trigger(eventLoaded);
+
                     }).attr('src', function () {
                         return $(this).attr('data-lazy-src')
                     }).each(function () {
-                        $(this).parent().find('.loader').show();
-                        $(this).css({
-                            opacity: '0.0'
-                        });
+                        $(this).parents('.item').trigger(eventLoading);
+
                         if (this.complete || $(this).width() > 0) {
                             $(this).trigger('load');
-                            $(this).stop(true, true);
-                            $(this).css({
-                                opacity: '1.0'
-                            });
-                            $(this).parent().find('.loader').hide()
+                            $(this).parents('.item').trigger(eventLoaded);
                         }
                     })
                 }
             );
-
         }
     };
 
