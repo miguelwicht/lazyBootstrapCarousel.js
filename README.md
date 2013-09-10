@@ -41,5 +41,5 @@ lazyBootstrapCarousel.js
 4. Call the plugin:
 
 	```javascript
-	$("#element").lazyBootstrapCarousel();
+	$(".carousel").lazyBootstrapCarousel();
 	```
